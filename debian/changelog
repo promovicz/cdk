@@ -1,3 +1,9 @@
+libcdk5 (5.0.20050424-2) unstable; urgency=low
+
+  * Call ./configure properly even if not executable.  Closes: #322977.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 13 Aug 2005 18:01:16 -0500
+
 libcdk5 (5.0.20050424-1) unstable; urgency=low
 
   * Packaged CDK 5 from invisible-island.net.  Closes: #319891, #211728.
