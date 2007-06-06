@@ -1,3 +1,12 @@
+libcdk5 (5.0.20060507-1) unstable; urgency=low
+
+  * New upstream release.
+  * Fixed header patching.  Patch from Robert Schiele.
+    Closes: #402978, #416336.
+  * Update widget count in description.  Closes: #294709.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 06 Jun 2007 03:54:31 -0500
+
 libcdk5 (5.0.20050424-2) unstable; urgency=low
 
   * Call ./configure properly even if not executable.  Closes: #322977.

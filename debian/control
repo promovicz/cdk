@@ -10,7 +10,7 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Description: C-based curses widget library
  CDK stands for "Curses Development Kit".  CDK sits on top of the curses
- library and provides 21 ready to use widgets for rapid application
+ library and provides 22 ready to use widgets for rapid application
  development of text-based interfaces.  CDK delivers many of the common
  widget types required for a robust interface.  Widgets can be combined
  to create complex widgets if needed.
@@ -25,7 +25,7 @@ Replaces: libcdk-examples, libcdk-dev
 Conflicts: libcdk-examples, libcdk-dev
 Description: C-based curses widget library (development files)
  CDK stands for "Curses Development Kit".  CDK sits on top of the curses
- library and provides 21 ready to use widgets for rapid application
+ library and provides 22 ready to use widgets for rapid application
  development of text-based interfaces.  CDK delivers many of the common
  widget types required for a robust interface.  Widgets can be combined
  to create complex widgets if needed.
