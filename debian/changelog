@@ -1,3 +1,9 @@
+libcdk5 (5.0.20060507-2) unstable; urgency=low
+
+  * Orphaning this package.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Feb 2010 13:06:45 -0600
+
 libcdk5 (5.0.20060507-1) unstable; urgency=low
 
   * New upstream release.

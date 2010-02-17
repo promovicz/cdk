@@ -1,7 +1,7 @@
 Source: libcdk5
 Section: libs
 Priority: optional
-Maintainer: John Goerzen <jgoerzen@complete.org>
+Maintainer: Debian QA Group <packages@qa.debian.org>
 Standards-Version: 3.6.2
 Build-Depends: debhelper (>= 4), libncurses5-dev, autotools-dev
 
