@@ -50,7 +50,7 @@ do
 		fi
 		OPT_I=y
 
-		if ( test -n "$OPT_D" && test -d "$OPT_D" || test "$OPT_D" = /usr/include/cdk )
+		if ( test -n "$OPT_D" && test -d "$OPT_D" )
 		then
 			if ( test -n "$OPT_S" && test -d "$OPT_S" )
 			then

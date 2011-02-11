@@ -61,7 +61,7 @@ includedir	= $(DESTDIR)@includedir@
 libdir		= $(DESTDIR)@libdir@
 mandir		= $(DESTDIR)@mandir@
 
-DOCUMENT_DIR	= $(prefix)/doc/cdk
+DOCUMENT_DIR	= @prefix@/doc/cdk
 INCLUDE_DIR	= $(includedir)/cdk
 LIB_DIR		= $(libdir)
 MAN_DIR		= $(mandir)/man@MAN_DIR@
@@ -472,7 +472,7 @@ man \
 $(DOCUMENT_DIR) \
 $(INCLUDE_DIR) \
 $(LIB_DIR) \
-$(MAN_DIR) : ; #$(srcdir)/mkdirs.sh $@
+$(MAN_DIR) : ; $(srcdir)/mkdirs.sh $@
 
 #
 # Files generated from templates:

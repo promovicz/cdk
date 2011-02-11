@@ -1,3 +1,33 @@
+libcdk5 (5.0.20060507-3) unstable; urgency=low
+
+  * QA Upload.
+  * Policy 3.9.1 (see Lintian cleaning below) and debian/compat 8
+  * Lintian cleaning
+    - ${misc:Depends} added to libcdk5 and libcdk5-dev
+    - fixed make clean call: [ ! -f Makefile ] || $(MAKE) distclean 
+    - debian/compat 7
+    - replaced ${Source-Version} with ${binary:Version} in debian/control
+    - dh_prep used in rules instead of dh_clean -k
+  * Removed static patching of config.guess config.sub, removed those files,
+    they will be copied from autotools-dev package in debian/rules
+  * removed the following lines from debian/libcdk5-dev.install
+    (dh_install throws error if you try to install files from an empty dir,
+    and these files were not present in the previous Debian build)
+    - usr/lib/pkgconfig/*
+    - usr/lib/*.la 
+    - usr/share/pkgconfig/* 
+  * Added missing headers and example files (Closes: #500161, LP: #565526)
+    - debian/patches/missing_header_examples.patch
+    - debian/libcdk5-dev.examples added: include/cdk_test.h, examples/.,
+      demos/
+  * Fixed segfault in calendar.c (Closes: #452401, LP: #290624)
+    - debian/patches/cal_segfault.patch
+  * debian/patches/libcdk5_man_cdk_display_examples_fix.diff
+    - The examples in the cdk_display(3) man page are incorrect
+      (wrong colors, segfault) (Closes: #593283)
+
+ -- Scott Howard <showard@debian.org>  Thu, 10 Feb 2011 19:50:32 -0500
+
 libcdk5 (5.0.20060507-2) unstable; urgency=low
 
   * Orphaning this package.
