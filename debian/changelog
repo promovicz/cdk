@@ -1,3 +1,10 @@
+libcdk5 (5.0.20060507-4) unstable; urgency=low
+
+  * QA Upload.
+  * explicitly_link_with_ncurses.patch: fix missing libncurses5 dependency.
+
+ -- Sam Hocevar <sho@debian.org>  Sat, 19 Feb 2011 23:59:54 +0000
+
 libcdk5 (5.0.20060507-3) unstable; urgency=low
 
   * QA Upload.
