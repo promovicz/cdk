@@ -3,27 +3,29 @@
 
 /*
  * $Author: tom $
- * $Date: 2006/05/07 00:22:25 $
- * $Revision: 1.68 $
+ * $Date: 2014/11/06 01:32:50 $
+ * $Revision: 1.84 $
  */
 
 /*
  * Declare file local prototypes.
  */
+/* *INDENT-OFF* */
 static BINDFN_PROTO (completeFilenameCB);
 static BINDFN_PROTO (displayFileInfoCB);
 static BINDFN_PROTO (fselectAdjustScrollCB);
 static char *contentToPath (CDKFSELECT *fselect, char *content);
-static char *errorMessage (char *format);
-static char *expandTilde (char *filename);
-static char *format1Date (char *format, time_t value);
-static char *format1Number (char *format, long value);
-static char *format1String (char *format, char *string);
-static char *format3String (char *format, char *s1, char *s2, char *s3);
-static char *format1StrVal (char *format, char *string, int value);
+static char *errorMessage (const char *format);
+static char *expandTilde (const char *filename);
+static char *format1Date (const char *format, time_t value);
+static char *format1Number (const char *format, long value);
+static char *format1String (const char *format, const char *string);
+static char *format3String (const char *format, const char *s1, const char *s2, const char *s3);
+static char *format1StrVal (const char *format, const char *string, int value);
 static char *trim1Char (char *source);
-static int createList (CDKFSELECT *widget, char **list, int listSize);
+static int createList (CDKFSELECT *widget, CDK_CSTRING2 list, int listSize);
 static void setPWD (CDKFSELECT *fselect);
+/* *INDENT-ON* */
 
 DeclareSetXXchar (static, _setMy);
 DeclareCDKObjects (FSELECT, Fselect, _setMy, String);
@@ -36,31 +38,32 @@ CDKFSELECT *newCDKFselect (CDKSCREEN *cdkscreen,
 			   int yplace,
 			   int height,
 			   int width,
-			   char *title,
-			   char *label,
+			   const char *title,
+			   const char *label,
 			   chtype fieldAttribute,
 			   chtype fillerChar,
 			   chtype highlight,
-			   char *dAttribute,
-			   char *fAttribute,
-			   char *lAttribute,
-			   char *sAttribute,
+			   const char *dAttribute,
+			   const char *fAttribute,
+			   const char *lAttribute,
+			   const char *sAttribute,
 			   boolean Box,
 			   boolean shadow)
 {
-   CDKFSELECT *fselect	= 0;
-   int parentWidth	= getmaxx (cdkscreen->window);
-   int parentHeight	= getmaxy (cdkscreen->window);
-   int boxWidth		= width;
-   int boxHeight	= height;
-   int xpos		= xplace;
-   int ypos		= yplace;
-   int tempWidth	= 0;
-   int tempHeight	= 0;
+   /* *INDENT-EQLS* */
+   CDKFSELECT *fselect  = 0;
+   int parentWidth      = getmaxx (cdkscreen->window);
+   int parentHeight     = getmaxy (cdkscreen->window);
+   int boxWidth;
+   int boxHeight;
+   int xpos             = xplace;
+   int ypos             = yplace;
+   int tempWidth        = 0;
+   int tempHeight       = 0;
    int labelLen, junk;
    chtype *chtypeString;
    int x;
-
+   /* *INDENT-OFF* */
    static const struct
    {
       int from;
@@ -70,6 +73,7 @@ CDKFSELECT *newCDKFselect (CDKSCREEN *cdkscreen,
       { CDK_BACKCHAR,	KEY_PPAGE },
       { CDK_FORCHAR,	KEY_NPAGE },
    };
+   /* *INDENT-ON* */
 
    if ((fselect = newCDKObject (CDKFSELECT, &my_funcs)) == 0)
         return (0);
@@ -108,24 +112,24 @@ CDKFSELECT *newCDKFselect (CDKSCREEN *cdkscreen,
    }
    keypad (fselect->win, TRUE);
 
-   /* Set some variables. */
-   ScreenOf (fselect)		= cdkscreen;
-   fselect->parent		= cdkscreen->window;
-   fselect->dirAttribute	= copyChar (dAttribute);
-   fselect->fileAttribute	= copyChar (fAttribute);
-   fselect->linkAttribute	= copyChar (lAttribute);
-   fselect->sockAttribute	= copyChar (sAttribute);
-   fselect->highlight		= highlight;
-   fselect->fillerCharacter	= fillerChar;
-   fselect->fieldAttribute	= fieldAttribute;
-   fselect->boxHeight		= boxHeight;
-   fselect->boxWidth		= boxWidth;
-   fselect->fileCounter		= 0;
-   fselect->pwd			= 0;
+   /* *INDENT-EQLS* Set some variables. */
+   ScreenOf (fselect)           = cdkscreen;
+   fselect->parent              = cdkscreen->window;
+   fselect->dirAttribute        = copyChar (dAttribute);
+   fselect->fileAttribute       = copyChar (fAttribute);
+   fselect->linkAttribute       = copyChar (lAttribute);
+   fselect->sockAttribute       = copyChar (sAttribute);
+   fselect->highlight           = highlight;
+   fselect->fillerCharacter     = fillerChar;
+   fselect->fieldAttribute      = fieldAttribute;
+   fselect->boxHeight           = boxHeight;
+   fselect->boxWidth            = boxWidth;
+   fselect->fileCounter         = 0;
+   fselect->pwd                 = 0;
    initExitType (fselect);
-   ObjOf (fselect)->inputWindow  = fselect->win;
-   fselect->shadow		= shadow;
-   fselect->shadowWin		= 0;
+   ObjOf (fselect)->inputWindow = fselect->win;
+   fselect->shadow              = shadow;
+   fselect->shadowWin           = 0;
 
    /* Get the present working directory. */
    setPWD (fselect);
@@ -159,12 +163,36 @@ CDKFSELECT *newCDKFselect (CDKSCREEN *cdkscreen,
    setCDKEntryLRChar (fselect->entryField, ACS_RTEE);
 
    /* Define the callbacks for the entry field. */
-   bindCDKObject (vENTRY, fselect->entryField, KEY_UP, fselectAdjustScrollCB, fselect);
-   bindCDKObject (vENTRY, fselect->entryField, KEY_PPAGE, fselectAdjustScrollCB, fselect);
-   bindCDKObject (vENTRY, fselect->entryField, KEY_DOWN, fselectAdjustScrollCB, fselect);
-   bindCDKObject (vENTRY, fselect->entryField, KEY_NPAGE, fselectAdjustScrollCB, fselect);
-   bindCDKObject (vENTRY, fselect->entryField, KEY_TAB, completeFilenameCB, fselect);
-   bindCDKObject (vENTRY, fselect->entryField, CTRL ('^'), displayFileInfoCB, fselect);
+   bindCDKObject (vENTRY,
+		  fselect->entryField,
+		  KEY_UP,
+		  fselectAdjustScrollCB,
+		  fselect);
+   bindCDKObject (vENTRY,
+		  fselect->entryField,
+		  KEY_PPAGE,
+		  fselectAdjustScrollCB,
+		  fselect);
+   bindCDKObject (vENTRY,
+		  fselect->entryField,
+		  KEY_DOWN,
+		  fselectAdjustScrollCB,
+		  fselect);
+   bindCDKObject (vENTRY,
+		  fselect->entryField,
+		  KEY_NPAGE,
+		  fselectAdjustScrollCB,
+		  fselect);
+   bindCDKObject (vENTRY,
+		  fselect->entryField,
+		  KEY_TAB,
+		  completeFilenameCB,
+		  fselect);
+   bindCDKObject (vENTRY,
+		  fselect->entryField,
+		  CTRL ('^'),
+		  displayFileInfoCB,
+		  fselect);
 
    /* Put the current working directory in the entry field. */
    setCDKEntryValue (fselect->entryField, fselect->pwd);
@@ -181,7 +209,7 @@ CDKFSELECT *newCDKFselect (CDKSCREEN *cdkscreen,
 					boxHeight - tempHeight,
 					tempWidth,
 					0,
-					fselect->dirContents,
+					(CDK_CSTRING2)fselect->dirContents,
 					fselect->fileCounter,
 					NONUMBERS, fselect->highlight,
 					Box, FALSE);
@@ -197,8 +225,12 @@ CDKFSELECT *newCDKFselect (CDKSCREEN *cdkscreen,
    }
 
    /* Setup the key bindings. */
-   for (x = 0; x < (int) SIZEOF (bindings); ++x)
-      bindCDKObject (vFSELECT, fselect, bindings[x].from, getcCDKBind, (void *)(long)bindings[x].to);
+   for (x = 0; x < (int)SIZEOF (bindings); ++x)
+      bindCDKObject (vFSELECT,
+		     fselect,
+		     (chtype)bindings[x].from,
+		     getcCDKBind,
+		     (void *)(long)bindings[x].to);
 
    registerCDKObject (cdkscreen, vFSELECT, fselect);
 
@@ -230,12 +262,13 @@ static void _moveCDKFselect (CDKOBJS *object,
 			     boolean refresh_flag)
 {
    CDKFSELECT *fselect = (CDKFSELECT *)object;
+   /* *INDENT-EQLS* */
    int currentX = getbegx (fselect->win);
    int currentY = getbegy (fselect->win);
-   int xpos	= xplace;
-   int ypos	= yplace;
-   int xdiff	= 0;
-   int ydiff	= 0;
+   int xpos     = xplace;
+   int ypos     = yplace;
+   int xdiff    = 0;
+   int ydiff    = 0;
 
    /*
     * If this is a relative move, then we will adjust where we want
@@ -292,7 +325,7 @@ static void drawMyScroller (CDKFSELECT *widget)
 static void injectMyScroller (CDKFSELECT *widget, chtype key)
 {
    SaveFocus (widget);
-   injectCDKScroll (widget->scrollField, key);
+   (void)injectCDKScroll (widget->scrollField, key);
    RestoreFocus (widget);
 }
 
@@ -334,7 +367,7 @@ char *activateCDKFselect (CDKFSELECT *fselect, chtype *actions)
    {
       for (;;)
       {
-	 input = getchCDKObject (ObjOf (fselect->entryField), &functionKey);
+	 input = (chtype)getchCDKObject (ObjOf (fselect->entryField), &functionKey);
 
 	 /* Inject the character into the widget. */
 	 ret = injectCDKFselect (fselect, input);
@@ -371,8 +404,8 @@ char *activateCDKFselect (CDKFSELECT *fselect, chtype *actions)
 static int _injectCDKFselect (CDKOBJS *object, chtype input)
 {
    CDKFSELECT *fselect = (CDKFSELECT *)object;
-   char		*filename;
-   boolean	file;
+   char *filename;
+   boolean file;
    char *ret = unknownString;
    bool complete = FALSE;
 
@@ -390,7 +423,10 @@ static int _injectCDKFselect (CDKOBJS *object, chtype input)
 
    /* Can we change into the directory? */
    file = chdir (filename);
-   chdir (fselect->pwd);
+   if (chdir (fselect->pwd) != 0)
+   {
+      return 0;
+   }
 
    /* If it's not a directory, return the filename. */
    if (file != 0)
@@ -427,26 +463,27 @@ static int _injectCDKFselect (CDKOBJS *object, chtype input)
  * This function sets the information inside the file selector.
  */
 void setCDKFselect (CDKFSELECT *fselect,
-		    char *directory,
+		    const char *directory,
 		    chtype fieldAttrib,
 		    chtype filler,
 		    chtype highlight,
-		    char *dirAttribute,
-		    char *fileAttribute,
-		    char *linkAttribute,
-		    char *sockAttribute,
+		    const char *dirAttribute,
+		    const char *fileAttribute,
+		    const char *linkAttribute,
+		    const char *sockAttribute,
 		    boolean Box GCC_UNUSED)
 {
-   CDKSCROLL *fscroll	= fselect->scrollField;
-   CDKENTRY *fentry	= fselect->entryField;
-   char *tempDir	= 0;
+   /* *INDENT-EQLS* */
+   CDKSCROLL *fscroll   = fselect->scrollField;
+   CDKENTRY *fentry     = fselect->entryField;
+   char *tempDir        = 0;
    char *mesg[10];
    char *newDirectory;
 
    /* Keep the info sent to us. */
-   fselect->fieldAttribute	= fieldAttrib;
-   fselect->fillerCharacter	= filler;
-   fselect->highlight		= highlight;
+   fselect->fieldAttribute = fieldAttrib;
+   fselect->fillerCharacter = filler;
+   fselect->highlight = highlight;
 
    /* Set the attributes of the entry field/scrolling list. */
    setCDKEntryFillerChar (fentry, filler);
@@ -477,7 +514,7 @@ void setCDKFselect (CDKFSELECT *fselect,
 	 mesg[3] = copyChar ("<C>Press Any Key To Continue.");
 
 	 /* Pop Up a message. */
-	 popupLabel (ScreenOf (fselect), mesg, 4);
+	 popupLabel (ScreenOf (fselect), (CDK_CSTRING2)mesg, 4);
 
 	 /* Clean up some memory. */
 	 freeCharList (mesg, 4);
@@ -537,7 +574,7 @@ void setCDKFselect (CDKFSELECT *fselect,
 
    /* Set the values in the scrolling list. */
    setCDKScrollItems (fscroll,
-		      fselect->dirContents,
+		      (CDK_CSTRING2)fselect->dirContents,
 		      fselect->fileCounter,
 		      FALSE);
 }
@@ -570,19 +607,24 @@ int setCDKFselectDirContents (CDKFSELECT *fselect)
    /* Set the properties of the files. */
    for (x = 0; x < fselect->fileCounter; x++)
    {
-      char *attr = "";
-      char *mode = "?";
+      const char *attr = "";
+      const char *mode = "?";
 
       /* FIXME: access() would give a more correct answer */
       if (lstat (dirList[x], &fileStat) == 0)
       {
 	 mode = " ";
-	 if (((fileStat.st_mode & S_IXUSR) != 0) ||
-	     ((fileStat.st_mode & S_IXGRP) != 0) ||
-	     ((fileStat.st_mode & S_IXOTH) != 0))
+	 if ((fileStat.st_mode & S_IXUSR) != 0)
 	 {
 	    mode = "*";
 	 }
+#if defined (S_IXGRP) && defined (S_IXOTH)
+	 else if (((fileStat.st_mode & S_IXGRP) != 0) ||
+		  ((fileStat.st_mode & S_IXOTH) != 0))
+	 {
+	    mode = "*";
+	 }
+#endif
       }
 
       switch (mode2Filetype (fileStat.st_mode))
@@ -621,11 +663,12 @@ char **getCDKFselectDirContents (CDKFSELECT *fselect, int *count)
 /*
  * This sets the current directory of the file selector.
  */
-int setCDKFselectDirectory (CDKFSELECT *fselect, char *directory)
+int setCDKFselectDirectory (CDKFSELECT *fselect, const char *directory)
 {
-   CDKENTRY *fentry	= fselect->entryField;
-   CDKSCROLL *fscroll	= fselect->scrollField;
-   int result = 1;
+   /* *INDENT-EQLS* */
+   CDKENTRY *fentry     = fselect->entryField;
+   CDKSCROLL *fscroll   = fselect->scrollField;
+   int result           = 1;
 
    /*
     * If the directory supplied is the same as what is already
@@ -655,7 +698,7 @@ int setCDKFselectDirectory (CDKFSELECT *fselect, char *directory)
 	 {
 	    /* Set the values in the scrolling list. */
 	    setCDKScrollItems (fscroll,
-			       fselect->dirContents,
+			       (CDK_CSTRING2)fselect->dirContents,
 			       fselect->fileCounter,
 			       FALSE);
 	 }
@@ -701,7 +744,7 @@ chtype getCDKFselectHighlight (CDKFSELECT *fselect)
  * This sets the attribute of the directory attribute in the
  * scrolling list.
  */
-void setCDKFselectDirAttribute (CDKFSELECT *fselect, char *attribute)
+void setCDKFselectDirAttribute (CDKFSELECT *fselect, const char *attribute)
 {
    /* Make sure they are not the same. */
    if (fselect->dirAttribute != attribute)
@@ -721,7 +764,7 @@ char *getCDKFselectDirAttribute (CDKFSELECT *fselect)
  * This sets the attribute of the link attribute in the
  * scrolling list.
  */
-void setCDKFselectLinkAttribute (CDKFSELECT *fselect, char *attribute)
+void setCDKFselectLinkAttribute (CDKFSELECT *fselect, const char *attribute)
 {
    /* Make sure they are not the same. */
    if (fselect->linkAttribute != attribute)
@@ -741,7 +784,7 @@ char *getCDKFselectLinkAttribute (CDKFSELECT *fselect)
  * This sets the attribute of the link attribute in the
  * scrolling list.
  */
-void setCDKFselectSocketAttribute (CDKFSELECT *fselect, char *attribute)
+void setCDKFselectSocketAttribute (CDKFSELECT *fselect, const char *attribute)
 {
    /* Make sure they are not the same. */
    if (fselect->sockAttribute != attribute)
@@ -761,7 +804,7 @@ char *getCDKFselectSocketAttribute (CDKFSELECT *fselect)
  * This sets the attribute of the link attribute in the
  * scrolling list.
  */
-void setCDKFselectFileAttribute (CDKFSELECT *fselect, char *attribute)
+void setCDKFselectFileAttribute (CDKFSELECT *fselect, const char *attribute)
 {
    /* Make sure they are not the same. */
    if (fselect->fileAttribute != attribute)
@@ -794,18 +837,19 @@ boolean getCDKFselectBox (CDKFSELECT *fselect)
  * This sets the contents of the widget
  */
 void setCDKFselectContents (CDKFSELECT *widget,
-			    char **list,
+			    CDK_CSTRING2 list,
 			    int listSize)
 {
-   CDKSCROLL *scrollp	= widget->scrollField;
-   CDKENTRY *entry	= widget->entryField;
+   /* *INDENT-EQLS* */
+   CDKSCROLL *scrollp   = widget->scrollField;
+   CDKENTRY *entry      = widget->entryField;
 
    if (!createList (widget, list, listSize))
       return;
 
    /* Set the information in the scrolling list. */
    setCDKScroll (scrollp,
-		 widget->dirContents,
+		 (CDK_CSTRING2)widget->dirContents,
 		 widget->fileCounter,
 		 NONUMBERS,
 		 scrollp->highlight,
@@ -964,57 +1008,63 @@ static int displayFileInfoCB (EObjectType objectType GCC_UNUSED,
 			      void *clientData,
 			      chtype key GCC_UNUSED)
 {
-   CDKENTRY		*entry		= (CDKENTRY *)object;
-   CDKFSELECT		*fselect	= (CDKFSELECT *)clientData;
-   CDKLABEL		*infoLabel;
-   struct stat		fileStat;
-   struct passwd	*pwEnt;
-   struct group		*grEnt;
-   char			*filename;
-   char			*filetype;
-   char			*mesg[10];
-   char			stringMode[15];
-   int			intMode;
-   boolean		functionKey;
+   CDKENTRY *entry = (CDKENTRY *)object;
+   CDKFSELECT *fselect = (CDKFSELECT *)clientData;
+   CDKLABEL *infoLabel;
+   struct stat fileStat;
+#ifdef HAVE_PWD_H
+   struct passwd *pwEnt;
+   struct group *grEnt;
+#endif
+   char *filename;
+   const char *filetype;
+   char *mesg[10];
+   char stringMode[15];
+   int intMode;
+   boolean functionKey;
 
-   /* Get the file name. */
    filename = fselect->entryField->info;
 
-   /* Get specific information about the files. */
-   lstat (filename, &fileStat);
-
-   /* Determine the file type. */
-   switch (mode2Filetype (fileStat.st_mode))
+   if (lstat (filename, &fileStat) == 0)
    {
-   case 'l':
-      filetype = "Symbolic Link";
-      break;
-   case '@':
-      filetype = "Socket";
-      break;
-   case '-':
-      filetype = "Regular File";
-      break;
-   case 'd':
-      filetype = "Directory";
-      break;
-   case 'c':
-      filetype = "Character Device";
-      break;
-   case 'b':
-      filetype = "Block Device";
-      break;
-   case '&':
-      filetype = "FIFO Device";
-      break;
-   default:
+      switch (mode2Filetype (fileStat.st_mode))
+      {
+      case 'l':
+	 filetype = "Symbolic Link";
+	 break;
+      case '@':
+	 filetype = "Socket";
+	 break;
+      case '-':
+	 filetype = "Regular File";
+	 break;
+      case 'd':
+	 filetype = "Directory";
+	 break;
+      case 'c':
+	 filetype = "Character Device";
+	 break;
+      case 'b':
+	 filetype = "Block Device";
+	 break;
+      case '&':
+	 filetype = "FIFO Device";
+	 break;
+      default:
+	 filetype = "Unknown";
+	 break;
+      }
+   }
+   else
+   {
       filetype = "Unknown";
-      break;
    }
 
    /* Get the user name and group name. */
+#ifdef HAVE_PWD_H
    pwEnt = getpwuid (fileStat.st_uid);
    grEnt = getgrgid (fileStat.st_gid);
+#endif
 
    /* Convert the mode_t type to both string and int. */
    intMode = mode2Char (stringMode, fileStat.st_mode);
@@ -1022,18 +1072,27 @@ static int displayFileInfoCB (EObjectType objectType GCC_UNUSED,
    /* Create the message. */
    mesg[0] = format1String ("Directory  : </U>%s", fselect->pwd);
    mesg[1] = format1String ("Filename   : </U>%s", filename);
-   mesg[2] = format1StrVal ("Owner      : </U>%s<!U> (%d)", pwEnt->pw_name, (int)fileStat.st_uid);
-   mesg[3] = format1StrVal ("Group      : </U>%s<!U> (%d)", grEnt->gr_name, (int)fileStat.st_gid);
+#ifdef HAVE_PWD_H
+   mesg[2] = format1StrVal ("Owner      : </U>%s<!U> (%d)",
+			    pwEnt->pw_name,
+			    (int)fileStat.st_uid);
+   mesg[3] = format1StrVal ("Group      : </U>%s<!U> (%d)",
+			    grEnt->gr_name,
+			    (int)fileStat.st_gid);
+#else
+   mesg[2] = format1Number ("Owner      : (%ld)", (long)fileStat.st_uid);
+   mesg[3] = format1Number ("Group      : (%ld)", (long)fileStat.st_gid);
+#endif
    mesg[4] = format1StrVal ("Permissions: </U>%s<!U> (%o)", stringMode, intMode);
-   mesg[5] = format1Number ("Size       : </U>%ld<!U> bytes", (long) fileStat.st_size);
-   mesg[6] = format1Date   ("Last Access: </U>%s", fileStat.st_atime);
-   mesg[7] = format1Date   ("Last Change: </U>%s", fileStat.st_ctime);
+   mesg[5] = format1Number ("Size       : </U>%ld<!U> bytes", (long)fileStat.st_size);
+   mesg[6] = format1Date ("Last Access: </U>%s", fileStat.st_atime);
+   mesg[7] = format1Date ("Last Change: </U>%s", fileStat.st_ctime);
    mesg[8] = format1String ("File Type  : </U>%s", filetype);
 
    /* Create the pop up label. */
    infoLabel = newCDKLabel (entry->obj.screen,
 			    CENTER, CENTER,
-			    mesg, 9,
+			    (CDK_CSTRING2)mesg, 9,
 			    TRUE, FALSE);
    drawCDKLabel (infoLabel, TRUE);
    getchCDKObject (ObjOf (infoLabel), &functionKey);
@@ -1047,9 +1106,9 @@ static int displayFileInfoCB (EObjectType objectType GCC_UNUSED,
    return (TRUE);
 }
 
-static char *make_pathname (char *directory, char *filename)
+static char *make_pathname (const char *directory, const char *filename)
 {
-   unsigned need = strlen (filename) + 2;
+   size_t need = strlen (filename) + 2;
    bool root = (strcmp (directory, "/") == 0);
    char *result;
 
@@ -1096,20 +1155,21 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
 			       void *clientData,
 			       chtype key GCC_UNUSED)
 {
-   CDKFSELECT *fselect	= (CDKFSELECT *)clientData;
-   CDKSCROLL *scrollp	= fselect->scrollField;
-   CDKENTRY *entry	= fselect->entryField;
-   char *filename	= copyChar (entry->info);
-   char *mydirname	= dirName (filename);
-   char *newFilename	= 0;
-   unsigned filenameLen	= 0;
-   int currentIndex	= 0;
-   int matches		= 0;
-   int baseChars	= 0;
+   /* *INDENT-EQLS* */
+   CDKFSELECT *fselect  = (CDKFSELECT *)clientData;
+   CDKSCROLL *scrollp   = fselect->scrollField;
+   CDKENTRY *entry      = fselect->entryField;
+   char *filename       = copyChar (entry->info);
+   char *mydirname      = dirName (filename);
+   char *newFilename    = 0;
+   size_t filenameLen   = 0;
+   int currentIndex     = 0;
+   int matches          = 0;
+   int baseChars        = 0;
    int secondaryMatches = 0;
    int isDirectory;
    char **list;
-   int Index, pos, x;
+   int Index, x;
    int difference, absoluteDifference;
 
    /* Make sure the filename is not null/empty. */
@@ -1118,6 +1178,7 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
    {
       Beep ();
       freeChar (filename);
+      freeChar (mydirname);
       return (TRUE);
    }
 
@@ -1132,7 +1193,12 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
 
    /* Make sure we can change into the directory. */
    isDirectory = chdir (filename);
-   chdir (fselect->pwd);
+   if (chdir (fselect->pwd) != 0)
+   {
+      freeChar (filename);
+      freeChar (mydirname);
+      return FALSE;
+   }
 
    setCDKFselect (fselect,
 		  isDirectory ? mydirname : filename,
@@ -1166,7 +1232,7 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
       }
 
       /* Look for a unique filename match. */
-      Index = searchList (list, fselect->fileCounter, filename);
+      Index = searchList ((CDK_CSTRING2)list, fselect->fileCounter, filename);
 
       /* If the index is less than zero, return we didn't find a match. */
       if (Index < 0)
@@ -1176,8 +1242,8 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
       else
       {
 	 /* Move to the current item in the scrolling list. */
-	 difference		= Index - scrollp->currentItem;
-	 absoluteDifference	= abs (difference);
+	 difference = Index - scrollp->currentItem;
+	 absoluteDifference = abs (difference);
 	 if (difference < 0)
 	 {
 	    for (x = 0; x < absoluteDifference; x++)
@@ -1195,14 +1261,13 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
 	 drawMyScroller (fselect);
 
 	 /* Ok, we found a match, is the next item similar? */
-	 if (Index+1 < fselect->fileCounter &&
-	    0 != list[Index+1] &&
-	    0 == strncmp (list[Index + 1], filename, filenameLen))
+	 if (Index + 1 < fselect->fileCounter &&
+	     0 != list[Index + 1] &&
+	     0 == strncmp (list[Index + 1], filename, filenameLen))
 	 {
 	    currentIndex = Index;
-	    baseChars = filenameLen;
+	    baseChars = (int)filenameLen;
 	    matches = 0;
-	    pos = 0;
 
 	    /* Determine the number of files which match. */
 	    while (currentIndex < fselect->fileCounter)
@@ -1236,7 +1301,8 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
 	       }
 
 	       /* Inject the character into the entry field. */
-	       injectCDKEntry (fselect->entryField, list[Index][baseChars]);
+	       (void)injectCDKEntry (fselect->entryField,
+				     (chtype)list[Index][baseChars]);
 	       baseChars++;
 	    }
 	 }
@@ -1247,7 +1313,7 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
 	    drawCDKEntry (entry, ObjOf (entry)->box);
 	 }
       }
-      freeCharList (list, fselect->fileCounter);
+      freeCharList (list, (unsigned)fselect->fileCounter);
       free (list);
    }
    freeChar (filename);
@@ -1259,11 +1325,15 @@ static int completeFilenameCB (EObjectType objectType GCC_UNUSED,
  */
 void deleteFileCB (EObjectType objectType GCC_UNUSED, void *object, void *clientData)
 {
-   CDKSCROLL	*fscroll	= (CDKSCROLL *)object;
-   CDKFSELECT	*fselect	= (CDKFSELECT *)clientData;
-   char		*buttons[]	= {"No", "Yes"};
-   CDKDIALOG	*question;
-   char		*mesg[10], *filename;
+   CDKSCROLL *fscroll = (CDKSCROLL *)object;
+   CDKFSELECT *fselect = (CDKFSELECT *)clientData;
+   const char *buttons[] =
+   {
+      "No",
+      "Yes"
+   };
+   CDKDIALOG *question;
+   char *mesg[10], *filename;
 
    /* Get the filename which is to be deleted. */
    filename = chtype2Char (fscroll->item[fscroll->currentItem]);
@@ -1275,8 +1345,9 @@ void deleteFileCB (EObjectType objectType GCC_UNUSED, void *object, void *client
 
    /* Create the dialog box. */
    question = newCDKDialog (ScreenOf (fselect), CENTER, CENTER,
-			    mesg, 2, buttons, 2, A_REVERSE,
-			    TRUE, TRUE, FALSE);
+			    (CDK_CSTRING2)mesg, 2,
+			    (CDK_CSTRING2)buttons, 2,
+			    A_REVERSE, TRUE, TRUE, FALSE);
    freeCharList (mesg, 2);
 
    /* If the said yes then try to nuke it. */
@@ -1302,7 +1373,7 @@ void deleteFileCB (EObjectType objectType GCC_UNUSED, void *object, void *client
 	 mesg[0] = copyChar (errorMessage ("<C>Cannot delete file: %s"));
 	 mesg[1] = copyChar (" ");
 	 mesg[2] = copyChar ("<C>Press any key to continue.");
-	 popupLabel (ScreenOf (fselect), mesg, 3);
+	 popupLabel (ScreenOf (fselect), (CDK_CSTRING2)mesg, 3);
 	 freeCharList (mesg, 3);
       }
    }
@@ -1340,9 +1411,10 @@ static int fselectAdjustScrollCB (EObjectType objectType GCC_UNUSED,
 				  void *clientData,
 				  chtype key)
 {
-   CDKFSELECT *fselect	= (CDKFSELECT *)clientData;
-   CDKSCROLL *scrollp	= (CDKSCROLL *)fselect->scrollField;
-   CDKENTRY *entry	= (CDKENTRY *)fselect->entryField;
+   /* *INDENT-EQLS* */
+   CDKFSELECT *fselect  = (CDKFSELECT *)clientData;
+   CDKSCROLL *scrollp   = (CDKSCROLL *)fselect->scrollField;
+   CDKENTRY *entry      = (CDKENTRY *)fselect->entryField;
    char *current;
    char *temp;
 
@@ -1374,26 +1446,26 @@ static int fselectAdjustScrollCB (EObjectType objectType GCC_UNUSED,
  */
 static char *trim1Char (char *source)
 {
-   unsigned len;
+   size_t len;
 
    if ((len = strlen (source)) != 0)
       source[--len] = '\0';
    return source;
 }
 
-static char *format1Date (char *format, time_t value)
+static char *format1Date (const char *format, time_t value)
 {
    char *result;
    char *temp = ctime (&value);
 
-   if ((result = (char *)malloc (strlen (format) + strlen (temp))) != 0)
+   if ((result = (char *)malloc (strlen (format) + strlen (temp) + 1)) != 0)
    {
       sprintf (result, format, trim1Char (temp));
    }
    return result;
 }
 
-static char *format1Number (char *format, long value)
+static char *format1Number (const char *format, long value)
 {
    char *result;
 
@@ -1402,7 +1474,7 @@ static char *format1Number (char *format, long value)
    return result;
 }
 
-static char *format3String (char *format, char *s1, char *s2, char *s3)
+static char *format3String (const char *format, const char *s1, const char *s2, const char *s3)
 {
    char *result;
 
@@ -1414,7 +1486,7 @@ static char *format3String (char *format, char *s1, char *s2, char *s3)
    return result;
 }
 
-static char *format1String (char *format, char *string)
+static char *format1String (const char *format, const char *string)
 {
    char *result;
 
@@ -1423,7 +1495,7 @@ static char *format1String (char *format, char *string)
    return result;
 }
 
-static char *format1StrVal (char *format, char *string, int value)
+static char *format1StrVal (const char *format, const char *string, int value)
 {
    char *result;
 
@@ -1432,7 +1504,7 @@ static char *format1StrVal (char *format, char *string, int value)
    return result;
 }
 
-static char *errorMessage (char *format)
+static char *errorMessage (const char *format)
 {
    char *message;
 #ifdef HAVE_STRERROR
@@ -1446,7 +1518,7 @@ static char *errorMessage (char *format)
 /*
  * This takes a ~ type account name and returns the full pathname.
  */
-static char *expandTilde (char *filename)
+static char *expandTilde (const char *filename)
 {
    char *result = 0;
    char *account;
@@ -1455,13 +1527,13 @@ static char *expandTilde (char *filename)
 
    /* Make sure the filename is not null/empty, and begins with a tilde */
    if ((filename != 0) &&
-       (len = strlen (filename)) != 0 &&
+       (len = (int)strlen (filename)) != 0 &&
        filename[0] == '~' &&
        (account = copyChar (filename)) != 0 &&
        (pathname = copyChar (filename)) != 0)
    {
       bool slash = FALSE;
-      char *home;
+      const char *home;
       int x;
       int len_a = 0;
       int len_p = 0;
@@ -1487,11 +1559,13 @@ static char *expandTilde (char *filename)
       pathname[len_p] = '\0';
 
       home = 0;
+#ifdef HAVE_PWD_H
       if (strlen (account) != 0 &&
 	  (accountInfo = getpwnam (account)) != 0)
       {
 	 home = accountInfo->pw_dir;
       }
+#endif
       if (home == 0 || *home == '\0')
 	 home = getenv ("HOME");
       if (home == 0 || *home == '\0')
@@ -1530,11 +1604,11 @@ static void destroyInfo (CDKFSELECT *widget)
    widget->fileCounter = 0;
 }
 
-static int createList (CDKFSELECT *widget, char **list, int listSize)
+static int createList (CDKFSELECT *widget, CDK_CSTRING2 list, int listSize)
 {
    int status = 0;
 
-   if (listSize > 0)
+   if (listSize >= 0)
    {
       char **newlist = typeCallocN (char *, listSize + 1);
 

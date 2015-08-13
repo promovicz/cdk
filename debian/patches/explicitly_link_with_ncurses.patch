@@ -1,13 +1,17 @@
-Index: libcdk5-5.0.20060507/Makefile.in
+Description: Fix missing libncurses5 dependency
+Author: Sam Hocevar <sho@debian.org>
+Reviewed-by: Herbert Parentes Fortes Neto <hpfn@ig.com.br>
+Last-Update: 2015-08-13
+Index: libcdk5-5.0.20141106/Makefile.in
 ===================================================================
---- libcdk5-5.0.20060507.orig/Makefile.in	2011-02-19 23:59:24.665541599 +0000
-+++ libcdk5-5.0.20060507/Makefile.in	2011-02-19 23:59:36.785541598 +0000
-@@ -269,7 +269,7 @@
- 	@$(RANLIB) $@
+--- libcdk5-5.0.20141106.orig/Makefile.in
++++ libcdk5-5.0.20141106/Makefile.in
+@@ -290,7 +290,7 @@ $(OBJECTS) :	include/cdk_config.h
+ all cdklib :: $(CDKLIB)
  
- cdkshlib $(CDKSHLIB) :: $(CDKSHOBJS)
--	gcc -shared -Wl,-soname=$(SONAME) $(LDFLAGS) -o $(CDKSHLIB) $(CDKSHOBJS)
-+	gcc -shared -Wl,-soname=$(SONAME) $(LDFLAGS) -o $(CDKSHLIB) $(CDKSHOBJS) $(LIBS)
+ @MAKE_NORMAL@cdkshlib $(OLD_SHLIB_FILE) :: $(CDKSHOBJS)
+-@MAKE_NORMAL@	gcc -shared -Wl,-soname=$(OLD_SONAME) $(LDFLAGS) $(LIBS) -o $(OLD_SHLIB_FILE) $(CDKSHOBJS)
++@MAKE_NORMAL@	gcc -shared -Wl,-soname=$(OLD_SONAME) $(LDFLAGS) $(LIBS) -o $(OLD_SHLIB_FILE) $(CDKSHOBJS) $(LIBS)
  
  #
  # Make the examples directory.

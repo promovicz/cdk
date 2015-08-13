@@ -1,3 +1,50 @@
+libcdk5 (5.0.20141106-1) experimental; urgency=medium
+
+  * QA Upload.
+  * New upstream release. (Closes: #520872, LP: #855931)
+
+  [ Jose G. Lopez work ]
+  * debian/libcdk5-dev.manpages:
+      - cdk5-config.1 entry added. Thanks for the manpage.
+  * debian/*: suggestions on the all others files.
+
+  [ Herbert Parentes Fortes Neto ]
+  * DH LEVEL = 9
+  * debian/.pc removed.
+  * debian/control:
+      - Standards-Version bumped.
+      - Homepage field added.
+        Link from long description removed.
+      - Vcs* fields added.
+      - Replaces and Conflicts fields from libcdk5-dev removed.
+        Packages don't exists anymore in Debian.
+  * debian/copyright: complete rewrite.
+  * debian/*.dirs removed.
+  * debian/libcdk5.install:
+      - fix the path of the libs.
+  * debian/libcdk5-dev.install:
+      - fix the path of the libs
+      - usr/bin/cdk5-config added.
+  * debian/libcdk5.symbols added.
+  * debian/rules:
+      - complete rewrite.
+      - added -fPIE CFLAGS.
+  * debian/patches:
+      - removed:
+          - cal_segfault.patch: upstream applied.
+          - explicitly_link_with_ncurses.patch: new Makefile format.
+          - libcdk5_man_cdk_display_examples_fix.diff: upstream applied.
+          - orig_debian_changes.patch: doesn't need anymore.
+      - added:
+          - bad_whatis_man_gen-scale_3.patch
+          - bad_whatis_man_gen-slider_3.patch
+          - errors-from-man-cdk_binding_3.patch
+          - errors-from-man-cdk_entry_3.patch
+          - errors-from-man-cdk_mentry_3.patch
+  * debian/watch added.
+
+ -- Herbert Parentes Fortes Neto <hpfn@ig.com.br>  Thu, 13 Aug 2015 10:10:35 -0300
+
 libcdk5 (5.0.20060507-4) unstable; urgency=low
 
   * QA Upload.

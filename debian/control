@@ -2,27 +2,26 @@ Source: libcdk5
 Section: libs
 Priority: optional
 Maintainer: Debian QA Group <packages@qa.debian.org>
-Standards-Version: 3.9.1
-Build-Depends: debhelper (>= 8), libncurses5-dev, autotools-dev
+Standards-Version: 3.9.6
+Build-Depends: autotools-dev, debhelper (>= 9), libncurses5-dev
+Homepage: http://invisible-island.net/cdk
+Vcs-Git: git://anonscm.debian.org/collab-maint/libcdk5.git
+Vcs-Browser: http://anonscm.debian.org/cgit/collab-maint/libcdk5.git
 
 Package: libcdk5
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: C-based curses widget library
  CDK stands for "Curses Development Kit".  CDK sits on top of the curses
  library and provides 22 ready to use widgets for rapid application
  development of text-based interfaces.  CDK delivers many of the common
  widget types required for a robust interface.  Widgets can be combined
  to create complex widgets if needed.
- .
- Home page: http://invisible-island.net/cdk/
 
 Package: libcdk5-dev
 Architecture: any
 Section: libdevel
-Depends: ${misc:Depends}, libcdk5 (= ${binary:Version}), libncurses5-dev
-Replaces: libcdk-examples, libcdk-dev
-Conflicts: libcdk-examples, libcdk-dev
+Depends: libcdk5 (= ${binary:Version}), libncurses5-dev, ${misc:Depends}
 Description: C-based curses widget library (development files)
  CDK stands for "Curses Development Kit".  CDK sits on top of the curses
  library and provides 22 ready to use widgets for rapid application
@@ -32,5 +31,3 @@ Description: C-based curses widget library (development files)
  .
  This package contains the header files and development libraries for
  the CDK library.
- .
- Home page: http://invisible-island.net/cdk/

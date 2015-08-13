@@ -1,5 +1,7 @@
-orig_debian_changes.patch
+bad_whatis_man_gen-slider_3.patch
+bad_whatis_man_gen-scale_3.patch
+errors-from-man-cdk_binding_3.patch
+errors-from-man-cdk_entry_3.patch
+errors-from-man-cdk_mentry_3.patch
 missing_header_examples.patch
-cal_segfault.patch
-libcdk5_man_cdk_display_examples_fix.diff
 explicitly_link_with_ncurses.patch

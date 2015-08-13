@@ -1,0 +1,36 @@
+Description: Fixes manpage-has-bad-whatis-entry
+Author: Herbert Parentes Fortes Neto <hpfn@ig.com.br>
+Last-Update: 2015-08-16
+Index: libcdk5-5.0.20141106/man/gen-slider.3
+===================================================================
+--- libcdk5-5.0.20141106.orig/man/gen-slider.3
++++ libcdk5-5.0.20141106/man/gen-slider.3
+@@ -1,3 +1,4 @@
++
+ '\" t
+ .\" $Id: gen-slider.3,v 1.6 2012/03/22 08:39:04 tom Exp $"
+ .de XX
+@@ -9,9 +10,9 @@
+ .XX drawCDK<MIXED>
+ .XX eraseCDK<MIXED>
+ .XX getCDK<MIXED>Box
+-#if <FLOAT>
++.XX #if <FLOAT>
+ .XX getCDK<MIXED>Digits
+-#endif <FLOAT>
++.XX #endif <FLOAT>
+ .XX getCDK<MIXED>HighValue
+ .XX getCDK<MIXED>LowValue
+ .XX getCDK<MIXED>Value
+@@ -24,9 +25,9 @@
+ .XX setCDK<MIXED>BackgroundColor
+ .XX setCDK<MIXED>Box
+ .XX setCDK<MIXED>BoxAttribute
+-#if <FLOAT>
++.XX #if <FLOAT>
+ .XX setCDK<MIXED>Digits
+-#endif <FLOAT>
++.XX #endif <FLOAT>
+ .XX setCDK<MIXED>HorizontalChar
+ .XX setCDK<MIXED>LLChar
+ .XX setCDK<MIXED>LRChar
