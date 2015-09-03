@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.15 2003/11/27 12:03:51 tom Exp $
+# $Id: Makefile.in,v 1.20 2013/07/19 23:55:03 tom Exp $
 #
-# Makefile for the examples directory.
+# Makefile for the demos directory.
 #
 SHELL		= /bin/sh
 
@@ -12,20 +12,25 @@ VPATH		= $(srcdir)
 
 CC		= @CC@
 RM		= rm -f
+CTAGS		= @CTAGS@
+ETAGS		= @ETAGS@
+LINT		= @LINT@
+LINT_OPTS	= @LINT_OPTS@
 
 LIBS		= -l@LIB_ROOTNAME@ @LIBS@
 
 LIBTOOL		= @LIBTOOL@ @ECHO_LT@
 LIBTOOL_CLEAN	= @LIB_CLEAN@
 LIBTOOL_LINK	= @LIB_LINK@
-LINK		= $(LIBTOOL_LINK) $(CC)
+LINK		= $(LIBTOOL_LINK)
 
 x		= @EXEEXT@
 o		= .@OBJEXT@
+LOCAL_LIBDIR	= @top_builddir@
 
 CFLAGS		= @CFLAGS@ @EXTRA_CFLAGS@
 CPPFLAGS	= @DEFS@ -I../include -I$(srcdir)/../include -I. @CPPFLAGS@
-LDFLAGS		= -L.. @LDFLAGS@
+LDFLAGS		= -L.. @LDFLAGS@ @LOCAL_LDFLAGS@
 
 BINS		= \
 		fileview$x \
@@ -40,7 +45,16 @@ BINS		= \
 OTHER_BINS	= \
 		serial$x
 
-#
+CDKSRC		= \
+		fileview.c \
+		rolodex.c \
+		command.c \
+		clock.c \
+		stopSign.c \
+		appointment.c \
+		vinstall.c \
+		serial.c
+
 # If you have Sybase installed on your system, try making
 # syb. It's a full screen interface to Sybase.
 #
@@ -55,7 +69,7 @@ all : $(BINS)
 # Standard .c to .o compile line.
 #
 .c.o:
-@RULE_CC@
+	@RULE_CC@
 	@ECHO_CC@$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
 #
 # Most of the examples are built from a single .c file using the same libraries
@@ -103,3 +117,12 @@ clean::
 
 distclean::	clean
 	-rm -f Makefile
+
+@MAKE_LOWER_TAGS@tags :
+@MAKE_LOWER_TAGS@	$(CTAGS) *.[ch] */*.[ch]
+
+@MAKE_LOWER_TAGS@TAGS :
+@MAKE_LOWER_TAGS@	$(ETAGS) *.[ch] */*.[ch]
+
+lint: $(CDKSRC)
+	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(CDKSRC)

@@ -1,5 +1,5 @@
 '\" t
-.\" $Id: cdk.3,v 1.12 2005/12/30 21:57:49 tom Exp $
+.\" $Id: cdk.3,v 1.14 2012/03/23 11:39:19 tom Exp $
 .de It
 .br
 .ie \\n(.$>=3 .ne \\$3
@@ -155,6 +155,10 @@ TAB or RETURN are injected into the
 widget via the injectCDKXXX function and the 
 character injected does not exit the widget.
 T}
+vERROR/T{
+This value states that an error was returned by curses, e.g., if the
+terminal was disconnected.
+T}
 vESCAPE_HIT/T{
 This value states the user hit ESCAPE to leave the widget.
 T}
@@ -164,7 +168,6 @@ This means that the widget has not been activated.
 T}
 .TE
 .SH SEE ALSO
-.BR cdk (3),
 .BR cdk_binding (3),
 .BR cdk_display (3),
 .BR cdk_draw (3),
