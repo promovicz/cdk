@@ -1,41 +1,51 @@
 '\" t
-.\" $Id: cdk_fselect.3,v 1.19 2005/04/15 23:40:49 tom Exp $
+.\" $Id: cdk_fselect.3,v 1.24 2006/05/07 01:00:01 tom Exp $
+.de XX
+..
 .TH cdk_fselect 3
 .SH NAME
-activateCDKFselect,
-destroyCDKFselect,
-drawCDKFselect,
-eraseCDKFselect,
-getCDKFselectBox,
-getCDKFselectDirAttribute,
-getCDKFselectDirectory,
-getCDKFselectFileAttribute,
-getCDKFselectFillerChar,
-getCDKFselectHighlight,
-getCDKFselectLinkAttribute,
-getCDKFselectSocketAttribute,
-injectCDKFselect,
-moveCDKFselect,
-newCDKFselect,
-positionCDKFselect,
-setCDKFselect,
-setCDKFselectBackgroundAttrib,
-setCDKFselectBackgroundColor,
-setCDKFselectBox,
-setCDKFselectBoxAttribute,
-setCDKFselectDirAttribute,
-setCDKFselectDirectory,
-setCDKFselectFileAttribute,
-setCDKFselectFillerChar,
-setCDKFselectHighlight,
-setCDKFselectHorizontalChar,
-setCDKFselectLLChar,
-setCDKFselectLRChar,
-setCDKFselectLinkAttribute,
-setCDKFselectSocketAttribute,
-setCDKFselectULChar,
-setCDKFselectURChar,
-setCDKFselectVerticalChar \- curses file selector widget.
+.XX activateCDKFselect
+.XX deleteFileCB
+.XX destroyCDKFselect
+.XX drawCDKFselect
+.XX eraseCDKFselect
+.XX getCDKFselectBox
+.XX getCDKFselectContents
+.XX getCDKFselectCurrentItem
+.XX getCDKFselectDirAttribute
+.XX getCDKFselectDirContents
+.XX getCDKFselectDirectory
+.XX getCDKFselectFileAttribute
+.XX getCDKFselectFillerChar
+.XX getCDKFselectHighlight
+.XX getCDKFselectLinkAttribute
+.XX getCDKFselectSocketAttribute
+.XX injectCDKFselect
+.XX moveCDKFselect
+.XX newCDKFselect
+.XX positionCDKFselect
+.XX setCDKFselect
+.XX setCDKFselectBackgroundAttrib
+.XX setCDKFselectBackgroundColor
+.XX setCDKFselectBox
+.XX setCDKFselectBoxAttribute
+.XX setCDKFselectContents
+.XX setCDKFselectCurrentItem
+.XX setCDKFselectDirAttribute
+.XX setCDKFselectDirContents
+.XX setCDKFselectDirectory
+.XX setCDKFselectFileAttribute
+.XX setCDKFselectFillerChar
+.XX setCDKFselectHighlight
+.XX setCDKFselectHorizontalChar
+.XX setCDKFselectLLChar
+.XX setCDKFselectLRChar
+.XX setCDKFselectLinkAttribute
+.XX setCDKFselectSocketAttribute
+.XX setCDKFselectULChar
+.XX setCDKFselectURChar
+.XX setCDKFselectVerticalChar
+cdk_fselect \- curses file selector widget.
 .SH SYNOPSIS
 .LP
 .B cc
@@ -50,6 +60,11 @@ setCDKFselectVerticalChar \- curses file selector widget.
 .BI "CDKFSELECT *" "fselect",
 .BI "chtype *" "actions");
 .TP 15
+.B "void deleteFileCB ("
+.BI "EObjectType " "objectType",
+.BI "void *" "object",
+.BI "void *" "clientData");
+.TP 15
 .B "void destroyCDKFselect ("
 .BI "CDKFSELECT *" "fselect");
 .TP 15
@@ -63,8 +78,19 @@ setCDKFselectVerticalChar \- curses file selector widget.
 .B "boolean getCDKFselectBox ("
 .BI "CDKFSELECT *" "fselect");
 .TP 15
+.B "char **getCDKFselectContents ("
+.BI "CDKFSELECT *" "widget",
+.BI "int *" "size");
+.TP 15
+.B "int getCDKFselectCurrentItem ("
+.BI "CDKFSELECT *" "widget");
+.TP 15
 .B "char *getCDKFselectDirAttribute ("
 .BI "CDKFSELECT *" "fselect");
+.TP 15
+.B "char **getCDKFselectDirContents ("
+.BI "CDKFSELECT *"  "fselect",
+.BI "int *" "count");
 .TP 15
 .B "char *getCDKFselectDirectory ("
 .BI "CDKFSELECT *" "fselect");
@@ -144,9 +170,21 @@ setCDKFselectVerticalChar \- curses file selector widget.
 .BI "CDKFSELECT *" "fselect",
 .BI "chtype " "character");
 .TP 15
+.B "void setCDKFselectContents ("
+.BI "CDKFSELECT *" "widget",
+.BI "char **" "list",
+.BI "int " "listSize");
+.TP 15
+.B "void setCDKFselectCurrentItem ("
+.BI "CDKFSELECT *" "widget",
+.BI "int " "item");
+.TP 15
 .B "void setCDKFselectDirAttribute ("
 .BI "CDKFSELECT *" "fselect",
 .BI "char *" "attribute");
+.TP 15
+.B "int setCDKFselectDirContents ("
+.BI "CDKFSELECT *" "fselect");
 .TP 15
 .B "int setCDKFselectDirectory ("
 .BI "CDKFSELECT *" "fselect",
@@ -218,6 +256,11 @@ widget data \fIexitType\fR will be set to \fIvNORMAL\fR.
 If the character
 entered was \fIESCAPE\fR then the function will return \fINULL\fR pointer and
 the widget data \fIexitType\fR is set to \fIvESCAPE_HIT\fR.
+void deleteFileCB (EObjectType objectType GCC_UNUSED, void *object, void *clientData)
+.TP 5
+.B deleteFileCB
+Prompts the user to confirm,
+and deletes the current item in the file-list.
 .TP 5
 .B destroyCDKFselect
 removes the widget from the screen and frees memory the object used.
@@ -233,9 +276,20 @@ This does \fINOT\fR destroy the widget.
 .B getCDKFselectBox
 returns true if the widget will be drawn with a box around it.
 .TP 5
+.B getCDKFselectContents
+returns the directory-contents (which are formatted),
+and sets the number of entries via the \fIsize\fP parameter.
+.TP 5
+.B getCDKFselectCurrentItem
+returns the current position in the scroll-widget.
+.TP 5
 .B getCDKFselectDirAttribute
 returns the attribute that directories are drawn with in the
 scrolling region of the widget.
+.TP
+.B getCDKFselectDirContents
+returns the list of files and the corresponding count as a side-effect.
+If no files are found, this function returns zero, otherwise one.
 .TP 5
 .B getCDKFselectDirectory
 returns the current directory of the widget.
@@ -374,7 +428,7 @@ See \fBcdk_position (3)\fR for key bindings.
 .B setCDKFselect
 lets the programmer modify certain elements of an existing fselect widget.
 The parameter names correspond to the same parameter
-names listed in the \fInewCDKFselect\fR function.
+names listed in the \fBnewCDKFselect\fR function.
 .TP 5
 .B setCDKFselectBackgroundAttrib
 sets the background attribute of the widget.
@@ -392,9 +446,19 @@ sets whether the widget will be drawn with a box around it.
 .B setCDKFselectBoxAttribute
 sets the attribute of the box.
 .TP 5
+.B setCDKFselectContents
+sets the contents of the widget.
+.TP 5
+.B setCDKFselectCurrentItem
+set the current position in the scroll-widget.
+.TP 5
 .B setCDKFselectDirAttribute
 sets the attribute that directories will be drawn with in the scrolling
 region of the widget.
+.B
+.B setCDKFselectDirContents
+This creates a list of the files in the current directory.
+See \fBgetCDKFselectDirContents\FP.
 .TP 5
 .B setCDKFselectDirectory
 sets the current directory of the widget.

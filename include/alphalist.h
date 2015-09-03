@@ -1,5 +1,5 @@
 /*
- * $Id: alphalist.h,v 1.20 2004/08/30 00:00:57 tom Exp $
+ * $Id: alphalist.h,v 1.23 2006/04/23 19:22:36 tom Exp $
  */
 
 #ifndef CDKINCLUDES
@@ -20,7 +20,7 @@ extern "C" {
 #endif
 
 /*
- * Changes 1999-2003 copyright Thomas E. Dickey
+ * Changes 1999-2005,2006 copyright Thomas E. Dickey
  *
  * Copyright 1999, Mike Glover
  * All rights reserved.
@@ -93,7 +93,7 @@ CDKALPHALIST *newCDKAlphalist (
 		int		/* width */,
 		char *		/* title */,
 		char *		/* label */,
-		char *		/* list */ [],
+		char **		/* list */,
 		int		/* listSize */,
 		chtype		/* fillerChar */,
 		chtype		/* highlight */,
@@ -117,7 +117,7 @@ char *activateCDKAlphalist (
  */
 void setCDKAlphalist (
 		CDKALPHALIST *	/* alphalist */,
-		char *		/* list */ [],
+		char **		/* list */,
 		int		/* listSize */,
 		chtype		/* fillerChar */,
 		chtype		/* highlight */,
@@ -128,12 +128,22 @@ void setCDKAlphalist (
  */
 void setCDKAlphalistContents (
 		CDKALPHALIST *	/* alphalist */,
-		char *		/* list */ [],
+		char **		/* list */,
 		int		/* listSize */);
 
 char **getCDKAlphalistContents (
 		CDKALPHALIST *	/* alphalist */,
 		int *		/* size */);
+
+/*
+ * Get/set the current position in the scroll-widget.
+ */
+int getCDKAlphalistCurrentItem(
+		CDKALPHALIST *	/* widget */);
+
+void setCDKAlphalistCurrentItem(
+		CDKALPHALIST *	/* widget */,
+		int		/* item */);
 
 /*
  * This sets the filler character of the entry field of the alphalist.
@@ -183,7 +193,7 @@ boolean getCDKAlphalistBox (
 
 /*
  * This sets the background attribute of the widget.
- */ 
+ */
 #define setCDKAlphalistBackgroundAttrib(w,c) setBKAttrOf(w,c)
 
 /*

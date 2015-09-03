@@ -2,8 +2,8 @@
 
 /*
  * $Author: tom $
- * $Date: 2004/08/31 22:18:03 $
- * $Revision: 1.14 $
+ * $Date: 2006/05/05 00:27:44 $
+ * $Revision: 1.19 $
  */
 
 /*
@@ -175,10 +175,8 @@ CDK<UPPER> *newCDK<MIXED> (CDKSCREEN *cdkscreen,
    for (x = 0; x < (int) SIZEOF(bindings); ++x)
       bindCDKObject (v<UPPER>, widget, bindings[x].from, getcCDKBind, (void *)(long)bindings[x].to);
 
-   /* Register this baby. */
    registerCDKObject (cdkscreen, v<UPPER>, widget);
 
-   /* Return the pointer. */
    return (widget);
 }
 
@@ -192,14 +190,14 @@ CDK<UPPER> *newCDK<MIXED> (CDKSCREEN *cdkscreen,
    /* Draw the widget. */
    drawCDK<MIXED> (widget, ObjOf(widget)->box);
 
-   /* Check if actions is null. */
    if (actions == 0)
    {
       chtype input = 0;
+      boolean functionKey;
+
       for (;;)
       {
-	 /* Get the input. */
-	 input = getcCDKObject (ObjOf(widget));
+	 input = getchCDKObject (ObjOf(widget), &functionKey);
 
 	 /* Inject the character into the widget. */
 	 ret = injectCDK<MIXED> (widget, input);
@@ -381,6 +379,9 @@ static bool performEdit(CDK<UPPER> *widget, chtype input)
    return result;
 }
 
+#define Decrement(value,by) if (value - by < value) value -= by
+#define Increment(value,by) if (value + by > value) value += by
+
 /*
  * This function injects a single character into the widget.
  */
@@ -426,19 +427,19 @@ static int _injectCDK<MIXED> (CDKOBJS *object, chtype input)
 		 break;
 
 	    case KEY_DOWN :
-		 widget->current -= widget->inc;
+		 Decrement(widget->current, widget->inc);
 		 break;
 
 	    case KEY_UP :
-		 widget->current += widget->inc;
+		 Increment(widget->current, widget->inc);
 		 break;
 
 	    case KEY_PPAGE :
-		 widget->current += widget->fastinc;
+		 Increment(widget->current, widget->fastinc);
 		 break;
 
 	    case KEY_NPAGE :
-		 widget->current -= widget->fastinc;
+		 Decrement(widget->current, widget->fastinc);
 		 break;
 
 	    case KEY_HOME :
@@ -590,7 +591,7 @@ static void _drawCDK<MIXED> (CDKOBJS *object, boolean Box)
 		   widget->labelLen);
       wrefresh (widget->labelWin);
    }
-   refreshCDKWindow (widget->win);
+   wrefresh (widget->win);
 
    /* Draw the field window. */
    drawCDK<MIXED>Field (widget);
@@ -627,7 +628,7 @@ static void drawCDK<MIXED>Field (CDK<UPPER> *widget)
 		    (int)strlen(temp));
 
    moveToEditPosition(widget, widget->fieldEdit);
-   refreshCDKWindow (widget->fieldWin);
+   wrefresh (widget->fieldWin);
 }
 
 /*
@@ -665,6 +666,9 @@ static void _destroyCDK<MIXED> (CDKOBJS *object)
       deleteCursesWindow (widget->labelWin);
       deleteCursesWindow (widget->shadowWin);
       deleteCursesWindow (widget->win);
+
+      /* Clean the key bindings. */
+      cleanCDKObjectBindings (v<UPPER>, widget);
 
       /* Unregister this object. */
       unregisterCDKObject (v<UPPER>, widget);
