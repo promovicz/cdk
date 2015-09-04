@@ -1,3 +1,10 @@
+libcdk5 (5.0.20141106-2) unstable; urgency=medium
+
+  * QA Upload.
+  * Upload to unstable. 
+
+ -- Herbert Parentes Fortes Neto <hpfn@ig.com.br>  Fri, 04 Sep 2015 09:54:34 -0300
+
 libcdk5 (5.0.20141106-1) experimental; urgency=medium
 
   * QA Upload.
