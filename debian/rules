@@ -2,7 +2,6 @@
 
 #export DH_VERBOSE=1
 
-#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export DEB_CFLAGS_MAINT_APPEND  = -fPIE
 
 %:
@@ -13,6 +12,7 @@ override_dh_auto_install:
 	mv debian/tmp/usr/share/doc/cdk debian/tmp/usr/share/doc/libcdk5-dev
 	rm debian/tmp/usr/share/doc/libcdk5-dev/COPYING
 	rm debian/tmp/usr/share/doc/libcdk5-dev/INSTALL
+	rm debian/tmp/usr/share/man/man3/#*if.3
 
 override_dh_compress:
 	dh_compress -Xexamples 

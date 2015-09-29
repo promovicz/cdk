@@ -1,3 +1,16 @@
+libcdk5 (5.0.20150928-1) unstable; urgency=medium
+
+  * QA Upload.
+  * New upstream release.
+  * debian/copyright updated.
+  * debian/rules:
+      - added entry to rm strange symlynks '#*if.3'.
+  * debian/watch:
+      - gpg signature entry added.
+  * debian/upstream/signing-key.asc created.
+
+ -- Herbert Parentes Fortes Neto <hpfn@ig.com.br>  Tue, 29 Sep 2015 10:14:04 -0300
+
 libcdk5 (5.0.20141106-2) unstable; urgency=medium
 
   * QA Upload.
