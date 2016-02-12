@@ -1,0 +1,7 @@
+libcdk5 (5.0.20160131-1) unstable; urgency=low
+
+  The new location for cdk5-config script is:
+  /usr/lib/$(DEB_HOST_MULTIARCH)/libcdk5-dev/bin
+
+ -- Herbert Parentes Fortes Neto <hpfn@ig.com.br>  Thu, 11 Feb 2016 13:25:42 -0200
+

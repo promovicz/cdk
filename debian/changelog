@@ -1,3 +1,33 @@
+libcdk5 (5.0.20160131-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/control:
+      - Set myself as maintainer. (Closes: #570267).
+      - pkg-config added to Build-Depends.
+      - Bumped Standards-Version to 3.9.7.
+      - Vcs-* fields using https.
+      - libcdk5-doc package created.
+  * debian/copyright updated.
+  * debian/libcdk5-doc.examples created.
+  * debian/libcdk5-dev.examples removed.
+  * debian/libcdk5-dev.install:
+      - cdk5-config script in new dir. A debian/NEWS.Debian file was
+        created to inform about it.
+  * debian/patches:
+      - removed (applied by the upstream):
+          - errors-from-man-cdk_binding_3.patch
+          - errors-from-man-cdk_entry_3.patch
+          - errors-from-man-cdk_mentry_3.patch
+  * debian/rules:
+      - '--with-pkg-config' added to dh_auto_configure.
+      - rm '#*if.3' line removed.
+      - using 'DEB_HOST_MULTIARCH', 'mkdir' and 'cp' to put cdk5-config
+        script in the right dir.
+  * debian/watch:
+      - version 4.
+
+ -- Herbert Parentes Fortes Neto <hpfn@ig.com.br>  Fri, 12 Feb 2016 14:01:14 -0200
+
 libcdk5 (5.0.20150928-1) unstable; urgency=medium
 
   * QA Upload.

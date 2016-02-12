@@ -5,7 +5,16 @@ Source: http://invisible-island.net/cdk/
 
 Files: *
 Copyright: 1995-2000 Mike Glover
-           1999-2015 Thomas Dickey <dickey@invisible-island.net>
+           1999-2016 Thomas Dickey <dickey@invisible-island.net>
+License: BSD-4-clause
+
+Files: button.c
+Copyright: 2016 Aarian.P.Aleahmad
+License: BSD-4-clause
+
+Files: include/button.h
+Copyright: 1999      Grant Edwards
+           2002-2016 Thomas E. Dickey
 License: BSD-4-clause
 
 Files: configure.in
@@ -29,7 +38,7 @@ Copyright: 2000      Raphael Bossek <bossekr@debian.org>
            2011      Scott Howard <showard@debian.org>
            2011      Sam Hocevar <sho@debian.org>
            2015      Jose G. López <josgalo@gmail.com>
-           2015      Herbert Parentes Fortes Neto <hpfn@ig.com.br>
+           2015-2016 Herbert Parentes Fortes Neto <hpfn@ig.com.br>
 License: BSD-4-clause
 
 License: BSD-4-clause

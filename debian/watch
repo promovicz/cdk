@@ -1,5 +1,5 @@
-version=3
-opts=passive,dversionmangle=s/(\d+\.\d+)\.(\d+)/$1-$2/,\
-pgpsigurlmangle=s/$/.asc/ \
+version=4
+opts="passive,dversionmangle=s/(\d+\.\d+)\.(\d+)/$1-$2/,\
+pgpsigurlmangle=s%$%.asc%" \
 ftp://invisible-island.net/cdk/cdk-(\d\S+)\.tgz
 

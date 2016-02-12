@@ -3,16 +3,24 @@
 #export DH_VERBOSE=1
 
 export DEB_CFLAGS_MAINT_APPEND  = -fPIE
+export DEB_BUILD_MAINT_OPTIONS = hardening=+bindnow
+
+DEB_HOST_MULTIARCH := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 %:
 	dh $@ --with autotools_dev
+
+override_dh_auto_configure:
+	dh_auto_configure -- --with-pkg-config
+
 
 override_dh_auto_install:
 	dh_auto_install -- installCDKSHLibrary
 	mv debian/tmp/usr/share/doc/cdk debian/tmp/usr/share/doc/libcdk5-dev
 	rm debian/tmp/usr/share/doc/libcdk5-dev/COPYING
 	rm debian/tmp/usr/share/doc/libcdk5-dev/INSTALL
-	rm debian/tmp/usr/share/man/man3/#*if.3
+	mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libcdk5-dev/bin
+	cp -a debian/tmp/usr/bin/cdk5-config debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libcdk5-dev/bin
 
 override_dh_compress:
 	dh_compress -Xexamples 
