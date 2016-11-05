@@ -1,8 +1,8 @@
 Source: libcdk5
 Section: libs
 Priority: optional
-Maintainer: Herbert Parentes Fortes Neto <hpfn@ig.com.br>
-Standards-Version: 3.9.7
+Maintainer: Herbert Parentes Fortes Neto <hpfn@debian.org>
+Standards-Version: 3.9.8
 Build-Depends: autotools-dev, debhelper (>= 9), libncurses5-dev, pkg-config
 Homepage: http://invisible-island.net/cdk
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/libcdk5.git
