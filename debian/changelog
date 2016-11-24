@@ -1,3 +1,16 @@
+libcdk5 (5.0.20161120-1) experimental; urgency=medium
+
+  * New upstream release.
+  * debian/copyright:
+      - Update.
+  * debian/libcdk5.symbols:
+      - New file.
+  * debian/rules:
+      - override_dh_makeshlibs:
+          - to omit the Debian revision. PVER variable.
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Thu, 24 Nov 2016 09:17:18 -0200
+
 libcdk5 (5.0.20160131-2) unstable; urgency=medium
 
   * debian/control:

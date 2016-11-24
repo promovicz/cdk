@@ -21,7 +21,7 @@ Files: configure.in
        manlinks.sed
        aclocal.m4
        cdk-config.in
-Copyright: 1999-2015 Thomas Dickey <dickey@invisible-island.net>
+Copyright: 1999-2016 Thomas Dickey <dickey@invisible-island.net>
 License: MIT-Variant
 
 Files: install-sh
