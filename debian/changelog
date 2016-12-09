@@ -1,3 +1,9 @@
+libcdk5 (5.0.20161204-2) unstable; urgency=low
+
+  * Upload to unstable. 
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Fri, 09 Dec 2016 12:39:13 -0200
+
 libcdk5 (5.0.20161204-1) experimental; urgency=medium
 
   * New upstream release.
