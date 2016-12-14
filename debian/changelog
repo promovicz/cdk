@@ -1,3 +1,12 @@
+libcdk5 (5.0.20161210-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/patches:
+      - Refresh bad_whatis_man_gen-scale_3.patch.
+      - Refresh bad_whatis_man_gen-slider_3.patch.
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Wed, 14 Dec 2016 10:08:21 -0200
+
 libcdk5 (5.0.20161204-2) unstable; urgency=low
 
   * Upload to unstable. 
