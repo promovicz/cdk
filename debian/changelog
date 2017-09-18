@@ -1,3 +1,14 @@
+libcdk5 (5.0.20161210-2) unstable; urgency=medium
+
+  * debian/control:
+      - Bump Standards-Version from 3.9.8 to 4.1.0
+  * Add debian/gbp.conf
+  * debian/patches:
+      - Refresh explicitly_link_with_ncurses.patch. (Closes: #876031)
+        Thanks Helmut Grohne.
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Mon, 18 Sep 2017 11:41:45 -0300
+
 libcdk5 (5.0.20161210-1) unstable; urgency=low
 
   * New upstream release.
