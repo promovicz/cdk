@@ -1,3 +1,15 @@
+libcdk5 (5.0.20161210-3) unstable; urgency=medium
+
+  * lintian:
+      - Fix debhelper-tools-from-autotools-dev-are-deprecated
+      - Fix debian-rules-sets-dpkg-architecture-variable
+  * debian/autoreconf.*:
+      - Files removed.
+  * debian/control:
+      - Bump Standards-Version to 4.1.1
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Sat, 11 Nov 2017 09:51:58 -0200
+
 libcdk5 (5.0.20161210-2) unstable; urgency=medium
 
   * debian/control:
