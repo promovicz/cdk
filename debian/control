@@ -2,7 +2,7 @@ Source: libcdk5
 Section: libs
 Priority: optional
 Maintainer: Herbert Parentes Fortes Neto <hpfn@debian.org>
-Standards-Version: 4.1.0
+Standards-Version: 4.1.1
 Build-Depends: debhelper (>= 9), libncurses5-dev, pkg-config
 Homepage: http://invisible-island.net/cdk
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/libcdk5.git
