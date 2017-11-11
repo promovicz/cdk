@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: Herbert Parentes Fortes Neto <hpfn@debian.org>
 Standards-Version: 4.1.0
-Build-Depends: autotools-dev, debhelper (>= 9), libncurses5-dev, pkg-config
+Build-Depends: debhelper (>= 9), libncurses5-dev, pkg-config
 Homepage: http://invisible-island.net/cdk
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/libcdk5.git
 Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/libcdk5.git
