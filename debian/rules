@@ -7,7 +7,7 @@ export PVER=$(shell dpkg-parsechangelog --show-field version | cut -d"-" -f1 )
 export DEB_CFLAGS_MAINT_APPEND  = -fPIE
 export DEB_BUILD_MAINT_OPTIONS = hardening=+bindnow
 
-DEB_HOST_MULTIARCH := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+DEB_HOST_MULTIARCH?=$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 %:
 	dh $@
