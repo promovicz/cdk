@@ -1,3 +1,13 @@
+libcdk5 (5.0.20161210-4) unstable; urgency=medium
+
+  * debian/control:
+      - Bump Standards-Version from 4.1.1 to 4.1.2
+      - Set Multi-Arch:
+          - libcdk5-doc
+          - libcdk5
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Sat, 23 Dec 2017 14:36:20 -0200
+
 libcdk5 (5.0.20161210-3) unstable; urgency=medium
 
   * lintian:
@@ -32,7 +42,7 @@ libcdk5 (5.0.20161210-1) unstable; urgency=low
 
 libcdk5 (5.0.20161204-2) unstable; urgency=low
 
-  * Upload to unstable. 
+  * Upload to unstable.
 
  -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Fri, 09 Dec 2016 12:39:13 -0200
 
@@ -44,7 +54,7 @@ libcdk5 (5.0.20161204-1) experimental; urgency=medium
 
 libcdk5 (5.0.20161120-2) unstable; urgency=medium
 
-  * Upload to unstable. 
+  * Upload to unstable.
 
  -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Fri, 25 Nov 2016 10:32:10 -0200
 
@@ -117,7 +127,7 @@ libcdk5 (5.0.20150928-1) unstable; urgency=medium
 libcdk5 (5.0.20141106-2) unstable; urgency=medium
 
   * QA Upload.
-  * Upload to unstable. 
+  * Upload to unstable.
 
  -- Herbert Parentes Fortes Neto <hpfn@ig.com.br>  Fri, 04 Sep 2015 09:54:34 -0300
 
@@ -181,7 +191,7 @@ libcdk5 (5.0.20060507-3) unstable; urgency=low
   * Policy 3.9.1 (see Lintian cleaning below) and debian/compat 8
   * Lintian cleaning
     - ${misc:Depends} added to libcdk5 and libcdk5-dev
-    - fixed make clean call: [ ! -f Makefile ] || $(MAKE) distclean 
+    - fixed make clean call: [ ! -f Makefile ] || $(MAKE) distclean
     - debian/compat 7
     - replaced ${Source-Version} with ${binary:Version} in debian/control
     - dh_prep used in rules instead of dh_clean -k
@@ -191,8 +201,8 @@ libcdk5 (5.0.20060507-3) unstable; urgency=low
     (dh_install throws error if you try to install files from an empty dir,
     and these files were not present in the previous Debian build)
     - usr/lib/pkgconfig/*
-    - usr/lib/*.la 
-    - usr/share/pkgconfig/* 
+    - usr/lib/*.la
+    - usr/share/pkgconfig/*
   * Added missing headers and example files (Closes: #500161, LP: #565526)
     - debian/patches/missing_header_examples.patch
     - debian/libcdk5-dev.examples added: include/cdk_test.h, examples/.,
@@ -264,7 +274,7 @@ libcdk (4.9.9-3.1) unstable; urgency=low
   * Don't overwrite INSTALL with generic autotools text.
   * Fix debian/copyright to include the actual license and a
     correct copyright statement (Closes: #236485, #238957)
-  
+
  -- Frank Lichtenheld <djpig@debian.org>  Sun, 11 Jul 2004 20:23:30 +0200
 
 libcdk (4.9.9-3) unstable; urgency=high
