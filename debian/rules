@@ -28,4 +28,4 @@ override_dh_compress:
 	dh_compress -Xexamples
 
 override_dh_makeshlibs:
-	dh_makeshlibs -- -v$(PVER) 
+	dh_makeshlibs -- -v$(PVER)
