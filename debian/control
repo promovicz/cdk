@@ -10,6 +10,7 @@ Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/libcdk5.git
 
 Package: libcdk5
 Architecture: any
+Multi-Arch: same
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: C-based curses widget library
  CDK stands for "Curses Development Kit". CDK sits on top of the curses
@@ -34,6 +35,7 @@ Description: C-based curses widget library (development files)
 
 Package: libcdk5-doc
 Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${misc:Depends}
 Description: C-based curses widget library (examples and demos)
