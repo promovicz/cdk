@@ -5,8 +5,8 @@ Maintainer: Herbert Parentes Fortes Neto <hpfn@debian.org>
 Standards-Version: 4.1.2
 Build-Depends: debhelper (>= 9), libncurses5-dev, pkg-config
 Homepage: http://invisible-island.net/cdk
-Vcs-Git: https://anonscm.debian.org/git/collab-maint/libcdk5.git
-Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/libcdk5.git
+Vcs-Git: https://salsa.debian.org/debian/libcdk5.git
+Vcs-Browser: https://salsa.debian.org/debian/libcdk5
 
 Package: libcdk5
 Architecture: any
