@@ -5,7 +5,7 @@ Source: http://invisible-island.net/cdk/
 
 Files: *
 Copyright: 1995-2000 Mike Glover
-           1999-2016 Thomas Dickey <dickey@invisible-island.net>
+           1999-2018 Thomas Dickey <dickey@invisible-island.net>
 License: BSD-4-clause
 
 Files: button.c
