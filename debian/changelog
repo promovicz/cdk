@@ -1,3 +1,26 @@
+libcdk5 (5.0.20180306-1) experimental; urgency=medium
+
+  * New upstream version 5.0.20180306
+  * debian/gbp.conf:
+      - Remove sign-tag option
+  * Rename package. libcdk5 -> libcdk5nc6. Because of libncurses transition.
+    The upstream did not change the SONAME. Instead of invent a SONAME,
+    changing the name. Credits to Sven Joachim. (Closes: #892280)
+      - debian/control:
+         - Build-Depends: libncurses-dev >= 6.1+20180210
+         - Package: libcdk5 -> libcdk5nc6
+             - Add Conflicts and Replaces
+         - Update Depends on *-dev package
+         - Update long description *-doc package
+      - debian/libcdk5.install:
+         - Rename to libcdk5nc6.install
+      - debian/libcdk5nc6.lintian-overrides:
+         - Add file with: package-name-doesnt-match-sonames
+      - debian/*.symbols:
+         - Testing a new file.
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Tue, 13 Mar 2018 10:04:36 -0300
+
 libcdk5 (5.0.20161210-6) unstable; urgency=medium
 
   * debian/watch:
