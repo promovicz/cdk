@@ -1,3 +1,9 @@
+libcdk5 (5.0.20180306-2) unstable; urgency=medium
+
+  * Upload to unstable. (Closes: #892114)
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Fri, 27 Apr 2018 11:35:51 -0300
+
 libcdk5 (5.0.20180306-1) experimental; urgency=medium
 
   * New upstream version 5.0.20180306
