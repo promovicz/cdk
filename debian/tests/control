@@ -1,0 +1,2 @@
+Test-Command: [ "$(dash cdk-config --version)" == '5.0.20180306' ]
+Restrictions: build-needed
