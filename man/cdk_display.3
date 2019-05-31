@@ -1,8 +1,13 @@
 '\" t
-.\" $Id: cdk_display.3,v 1.14 2016/12/04 19:57:27 tom Exp $
+.\" $Id: cdk_display.3,v 1.17 2019/02/20 22:15:59 tom Exp $
 .de bP
-.IP \(bu 4
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
 ..
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de It
 .br
 .ie \\n(.$>=3 .ne \\$3
@@ -177,7 +182,10 @@ The above example underlines the label marker, which also sets
 color pair number 2.
 .
 .SS How To Justify Strings
-Justification commands can left justify, right justify, or center a string of text.
+Justification commands can
+left justify,
+right justify,
+or center a string of text.
 To use a justification format in a string the command <X> is used.
 The following table lists the format commands:
 .LP
@@ -260,9 +268,12 @@ A format command must be at the beginning of the string.
 .SS How To Use Special Drawing Characters
 Cdk has a set of special drawing characters which can be inserted into any
 ASCII file.
-In order to use a special character the format command <#XXX>
-is used.
-The following table lists all of the special character commands available.
+These characters are encoded using the format command \*(``<#\fIXX\fP>\*(''
+where \fIXX\fP is a two-character name.
+The \fBchar2Chtype\fP and \fBchtype2String\fP functions
+provide conversion to/from curses \fBchtype\fP data (see \fBcdk_util\fP(3)).
+.PP
+The following table lists the supported special character commands.
 .TS
 center tab(/) box;
 l l
@@ -442,4 +453,5 @@ vVIEWONLY/Uneditable field.
 .SH SEE ALSO
 .BR cdk (3),
 .BR cdk_binding (3),
-.BR cdk_screen (3)
+.BR cdk_screen (3),
+.BR cdk_util (3)
