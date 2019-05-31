@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.123 2015/09/28 23:37:35 tom Exp $
+# $Id: Makefile.in,v 1.128 2019/03/03 23:21:00 tom Exp $
 #
-#  Copyright 2001-2014,2015 Thomas E. Dickey
+#  Copyright 2001-2015,2019 Thomas E. Dickey
 #  Copyright 1999, Mike Glover
 #  All rights reserved.
 #
@@ -80,13 +80,15 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
-DOCUMENT_DIR	= $(DESTDIR)$(datadir)/doc/$(PACKAGE)
+DOCUMENT_DIR	= $(DESTDIR)$(datadir)/doc/$(HDR_ROOTNAME)
 BIN_DIR		= $(DESTDIR)$(bindir)
 INCLUDE_DIR	= $(DESTDIR)$(includedir)
 INCLUDE_SUBDIR	= $(DESTDIR)$(includedir)/$(HDR_ROOTNAME)
 SHLIB_DIR	= $(DESTDIR)$(shlibdir)
 LIB_DIR		= $(DESTDIR)$(libdir)
-MAN_DIR		= $(DESTDIR)$(mandir)/man@MAN_TAG@
+MAN1_DIR	= $(DESTDIR)$(mandir)/man1
+MAN1SECT	= 1
+MAN3_DIR	= $(DESTDIR)$(mandir)/man@MAN_TAG@
 MANSECT		= @MANSECT@
 
 CC		= @CC@
@@ -242,7 +244,9 @@ CDKSRC		= \
 		view_info.c \
 		viewer.c
 
-CDKMAN		= \
+CDKMAN1		= \
+		cdk5-config.1
+CDKMAN3		= \
 		cdk.3 \
 		cdk_alphalist.3 \
 		cdk_binding.3 \
@@ -350,35 +354,51 @@ uninstallCDKReadme ::
 # This installs the CDK man pages.
 #
 install \
-installCDKManPages ::  headers.sed $(MAN_DIR) manpage.sed $(AUTO_MAN)
-	@echo "Installing the CDK man pages in $(MAN_DIR) ..."
+installCDKManPages ::  headers.sed $(MAN1_DIR) manpage.sed $(AUTO_MAN)
+	@echo "Installing the CDK man pages in $(MAN1_DIR) ..."
+	@for i in $(CDKMAN1); do \
+	   $(SHELL) $(srcdir)/headers.sh \
+			-x "$(INSTALL_DATA)" \
+			-d $(MAN1_DIR) \
+			-s . \
+			-t $(MAN1SECT) \
+			-e manpage.sed $(srcdir)/man/$$i; \
+	   $(SHELL) $(srcdir)/manlinks.sh installing $(srcdir) $(MAN1_DIR) $(MAN1SECT) $(srcdir)/man/$$i;  \
+	done
+
+install \
+installCDKManPages ::  headers.sed $(MAN3_DIR) manpage.sed $(AUTO_MAN)
+	@echo "Installing the CDK man pages in $(MAN3_DIR) ..."
 	@for i in $(AUTO_MAN); do \
 	   $(SHELL) $(srcdir)/headers.sh \
 			-x "$(INSTALL_DATA)" \
-			-d $(MAN_DIR) \
+			-d $(MAN3_DIR) \
 			-s . \
 			-t $(MANSECT) \
 			-e manpage.sed $$i; \
-	   $(SHELL) $(srcdir)/manlinks.sh installing $(srcdir) $(MAN_DIR) $(MANSECT) $$i;  \
+	   $(SHELL) $(srcdir)/manlinks.sh installing $(srcdir) $(MAN3_DIR) $(MANSECT) $$i;  \
 	done
-	@for i in $(CDKMAN); do \
+	@for i in $(CDKMAN3); do \
 	   $(SHELL) $(srcdir)/headers.sh \
 			-x "$(INSTALL_DATA)" \
-			-d $(MAN_DIR) \
+			-d $(MAN3_DIR) \
 			-s . \
 			-t $(MANSECT) \
 			-e manpage.sed $(srcdir)/man/$$i; \
-	   $(SHELL) $(srcdir)/manlinks.sh installing $(srcdir) $(MAN_DIR) $(MANSECT) $(srcdir)/man/$$i;  \
+	   $(SHELL) $(srcdir)/manlinks.sh installing $(srcdir) $(MAN3_DIR) $(MANSECT) $(srcdir)/man/$$i;  \
 	done
 
 uninstall \
 uninstallCDKManPages ::
-	@echo "Uninstalling the CDK man pages from $(MAN_DIR) ..."
+	@echo "Uninstalling the CDK man pages from $(MAN3_DIR) ..."
 	@- for i in $(AUTO_MAN); do \
-	   $(SHELL) $(srcdir)/manlinks.sh removing $(srcdir) $(MAN_DIR) $(MANSECT) $(srcdir)/$$i; \
+	   $(SHELL) $(srcdir)/manlinks.sh removing $(srcdir) $(MAN3_DIR) $(MANSECT) $(srcdir)/$$i; \
 	done
-	@- for i in $(CDKMAN); do \
-	   $(SHELL) $(srcdir)/manlinks.sh removing $(srcdir) $(MAN_DIR) $(MANSECT) $(srcdir)/man/$$i; \
+	@- for i in $(CDKMAN3); do \
+	   $(SHELL) $(srcdir)/manlinks.sh removing $(srcdir) $(MAN3_DIR) $(MANSECT) $(srcdir)/man/$$i; \
+	done
+	@- for i in $(CDKMAN1); do \
+	   $(SHELL) $(srcdir)/manlinks.sh removing $(srcdir) $(MAN1_DIR) $(MAN1SECT) $(srcdir)/man/$$i; \
 	done
 
 #
@@ -397,7 +417,7 @@ installCDKHeaderFiles :: \
 	@for i in $(CDKHDR); do \
 	   $(HEADERS_SH) include/$$i; \
 	done
-@HDR_SUBDIR@	rm -f $(INCLUDE_DIR)/cdk.h && mv $(INCLUDE_SUBDIR)/cdk.h $(INCLUDE_DIR)/$(PACKAGE).h
+@HDR_SUBDIR@	$(RM) $(INCLUDE_DIR)/cdk.h && mv $(INCLUDE_SUBDIR)/cdk.h $(INCLUDE_DIR)/$(HDR_ROOTNAME).h
 
 uninstall \
 uninstallCDKHeaderFiles ::
@@ -408,20 +428,24 @@ uninstallCDKHeaderFiles ::
 	@- for i in $(CDKHDR); do \
 	   $(RM) $(INCLUDE_SUBDIR)/$$i; \
 	done
-@HDR_SUBDIR@	rm -f $(INCLUDE_DIR)/cdk.h
+@HDR_SUBDIR@	$(RM) $(INCLUDE_DIR)/cdk.h
 
 #
 # This installs the CDK library.
 #
 install \
-installCDKLibrary :: $(SHLIB_DIR) $(CDKLIB)
-	@echo "Installing CDK library"
-	@$(INSTALL_LIB) $(CDKLIB) $(SHLIB_DIR)/$(CDKLIB)
+install.libs :: $(SHLIB_DIR) $(CDKLIB)
+@MAKE_STATIC@	@echo "Installing CDK library"
+@MAKE_STATIC@		@$(INSTALL_LIB) $(CDKLIB) $(SHLIB_DIR)/$(CDKLIB)
+
+installCDKLibrary : install.libs
 
 uninstall \
-uninstallCDKLibrary ::
-	@echo "Uninstalling CDK library"
-	@- $(UNINSTALL_LIB) $(SHLIB_DIR)/$(CDKLIB)
+uninstall.libs ::
+@MAKE_STATIC@		@echo "Uninstalling CDK library"
+@MAKE_STATIC@		@- $(UNINSTALL_LIB) $(SHLIB_DIR)/$(CDKLIB)
+
+uninstallCDKLibrary : uninstall.libs
 
 @MAKE_DLLS@install \
 @MAKE_DLLS@installImportLibrary :: $(LIB_DIR) $(IMPORT_LIB)
@@ -438,13 +462,13 @@ uninstallCDKLibrary ::
 #
 install \
 installCDKHeaderFiles \
-installCDKLibrary :: $(BIN_DIR) cdk-config
+install.libs :: $(BIN_DIR) cdk-config
 	@echo "Installing script $(CFG_ROOTNAME)$(VERSION_MAJOR)-config"
 	@$(INSTALL) cdk-config $(BIN_DIR)/$(CFG_ROOTNAME)$(VERSION_MAJOR)-config
 
 uninstall \
-uninstallCDKHeaderFiles \
-uninstallCDKLibrary :: cdk-config
+uninstall.libs \
+uninstallCDKHeaderFiles :: cdk-config
 	@echo "Uninstalling script $(CFG_ROOTNAME)$(VERSION_MAJOR)-config"
 	@$(RM) $(BIN_DIR)/$(CFG_ROOTNAME)$(VERSION_MAJOR)-config
 
@@ -486,6 +510,8 @@ all-lint: lint
 	cd demos    	&& $(MAKE) $(MAKE_RECUR) lint
 	cd cli      	&& $(MAKE) $(MAKE_RECUR) lint
 
+check:
+	@echo "This interactive program has no automated tests"
 #
 # Clean up after ourselves...
 #
@@ -548,7 +574,8 @@ $(DOCUMENT_DIR) \
 $(INCLUDE_DIR) \
 $(INCLUDE_SUBDIR) \
 $(LIB_DIR) \
-$(MAN_DIR) : ; mkdir -p $@
+$(MAN1_DIR) \
+$(MAN3_DIR) : ; mkdir -p $@
 
 #
 # Files generated from templates:
