@@ -1,3 +1,19 @@
+libcdk5 (5.0.20190303-1) experimental; urgency=medium
+
+  * New upstream version 5.0.20190303
+  * debian/changelog:
+      - Remove empty line
+  * debian/control:
+      - Bump Standards-Version from 4.1.3 to 4.3.0
+  * debian/libcdk5nc6.symbols:
+      - New file
+  * debian/patches/series:
+      - Remove cdk-h-old-place.patch file
+  * debian/upstream/*.asc:
+      - Armored keyring file - minimal key
+
+ -- Herbert Parentes Fortes Neto <hpfn@debian.org>  Thu, 06 Jun 2019 15:38:35 -0300
+
 libcdk5 (5.0.20180306-3) unstable; urgency=medium
 
   * debian/tests/control:
